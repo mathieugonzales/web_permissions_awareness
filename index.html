@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Localisation</title>
+</head>
+<body>
+    <h1>Localisation</h1>
+    <p id="locationData"></p>
+
+    <script>
+        // Function to get and display location
+        function getLocation() {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var latitude = position.coords.latitude;
+                    var longitude = position.coords.longitude;
+                    document.getElementById("locationData").innerHTML = "Latitude: " + latitude + "<br>Longitude: " + longitude;
+
+                    // Create a link to Google Maps with the coordinates
+                    var googleMapsLink = document.createElement("a");
+                    googleMapsLink.href = "https://www.google.com/maps?q=" + latitude + "," + longitude;
+                    googleMapsLink.target = "_blank";
+                    googleMapsLink.textContent = "Voir sur Google Maps";
+                    document.body.appendChild(googleMapsLink);
+                });
+            } else {
+                document.getElementById("locationData").innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        // Call the getLocation function when the page loads
+        window.addEventListener("load", getLocation);
+    </script>
+</body>
+</html>
