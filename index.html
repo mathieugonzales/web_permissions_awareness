@@ -1,35 +1,71 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Localisation</title>
+    <meta charset="UTF-8">
+    <title>Sensibilisation aux permissions des sites Web</title>
 </head>
 <body>
-    <h1>Localisation</h1>
+    <h1>Sensibilisation aux permissions des sites Web</h1>
+
+    <h2>Accéder au site Web</h2>
+    <img src="img/qrcode.png" alt="QR Code">
+    
+    <!-- Location Data and Google Maps Link -->
+    <h2>Geolocalisation</h2>
     <p id="locationData"></p>
+    <a id="googleMapsLink" href="#" target="_blank">Voir sur Google Maps</a>
+
+    <!-- Display clipboard data here -->
+    <h2>Contenu du presse-papier</h2>
+    <button id="clipboardButton">Accès au presse-papier</button>
+    <p id="clipboardData"></p>
+
+    <!-- Disclaimer -->
+    <h2>Note Importante</h2>
+    <ul>
+        <li>Ce site web est destiné uniquement à des fins éducatives pour illustrer comment les sites web peuvent accéder et afficher les données de localisation.</li>
+        <li>Vos données de localisation ne sont ni stockées ni envoyées ailleurs ; tout se passe localement sur votre appareil.</li>
+        <li>Soyez toujours prudent lors de l'octroi d'autorisations à des sites web et des applications. N'accordez l'accès qu'à des sources de confiance.</li>
+    </ul>
 
     <script>
-        // Function to get and display location
+        // Fonction pour obtenir et afficher la localisation
         function getLocation() {
             if ("geolocation" in navigator) {
                 navigator.geolocation.getCurrentPosition(function (position) {
                     var latitude = position.coords.latitude;
                     var longitude = position.coords.longitude;
-                    document.getElementById("locationData").innerHTML = "Latitude: " + latitude + "<br>Longitude: " + longitude;
+                    var locationDataElement = document.getElementById("locationData");
+                    var googleMapsLinkElement = document.getElementById("googleMapsLink");
 
-                    // Create a link to Google Maps with the coordinates
-                    var googleMapsLink = document.createElement("a");
-                    googleMapsLink.href = "https://www.google.com/maps?q=" + latitude + "," + longitude;
-                    googleMapsLink.target = "_blank";
-                    googleMapsLink.textContent = "Voir sur Google Maps";
-                    document.body.appendChild(googleMapsLink);
+                    locationDataElement.innerHTML = "Latitude : " + latitude + "<br>Longitude : " + longitude;
+
+                    // Créer un lien vers Google Maps avec les coordonnées
+                    var googleMapsUrl = "https://www.google.com/maps?q=" + latitude + "," + longitude;
+                    googleMapsLinkElement.href = googleMapsUrl;
+                    googleMapsLinkElement.style.display = "block";
                 });
             } else {
-                document.getElementById("locationData").innerHTML = "Geolocation is not supported by this browser.";
+                var locationDataElement = document.getElementById("locationData");
+                locationDataElement.innerHTML = "La géolocalisation n'est pas prise en charge par ce navigateur.";
             }
         }
 
-        // Call the getLocation function when the page loads
-        window.addEventListener("load", getLocation);
+        function accessClipboardData() {
+            navigator.clipboard.readText().then(function (clipText) {
+                var clipboardDataElement = document.getElementById("clipboardData");
+                clipboardDataElement.textContent = clipText;
+            }).catch(function (error) {
+                console.error("Error accessing clipboard data: ", error);
+            });
+        }
+
+        // Add a click event listener to the clipboardButton
+        var clipboardButton = document.getElementById("clipboardButton");
+        clipboardButton.addEventListener("click", accessClipboardData);
+
+        // Appeler la fonction getLocation lorsque la page se charge
+        getLocation();
     </script>
 </body>
 </html>
